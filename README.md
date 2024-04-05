@@ -1,1 +1,1 @@
-# vue-intermediate-
+# Vue.js 중급
