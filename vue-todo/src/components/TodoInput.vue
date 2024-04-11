@@ -19,9 +19,8 @@ export default {
   methods: {
     addTodo: function () {
       if (this.newTodoItem !== "") {
-        var obj = { complete: false, item: this.newTodoItem };
-        //저장로직
-        localStorage.setItem(this.newTodoItem, JSON.stringify(obj)); //자바스크립트 객체를 스트링으로 변환
+        //addTodoItem 이벤트에 데이터 테워서 부모인 app으로 보냄
+        this.$emit("addTodoItem", this.newTodoItem);
         this.clearInput();
       }
     },
