@@ -5,15 +5,29 @@
     <span class="addContainer" v-on:click="addTodo">
       <i class="fa-solid fa-plus addBtn"></i>
     </span>
+    <AlertModal v-show="showModal" @close="showModal = false">
+      <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+      <h3 slot="header">
+        경고!
+        <span v-on:click="showModal = false">
+          <i class="fa-solid fa-x closeModalBtn"></i>
+        </span>
+      </h3>
+      <h3 slot="body">뭐라도 쓰세요</h3>
+    </AlertModal>
   </div>
 </template>
 
 <script>
-2;
+import AlertModal from "./common/ModalTag.vue";
 export default {
   data: function () {
     return {
       newTodoItem: "",
+      showModal: false,
     };
   },
   methods: {
@@ -22,12 +36,17 @@ export default {
         //addTodoItem 이벤트에 데이터 테워서 부모인 app으로 보냄
         this.$emit("addTodoItem", this.newTodoItem);
         this.clearInput();
+      } else {
+        this.showModal = !this.showModal;
       }
     },
     clearInput: function () {
       //초기화
       this.newTodoItem = "";
     },
+  },
+  components: {
+    AlertModal,
   },
 };
 </script>
@@ -59,5 +78,8 @@ input:focus {
 .addBtn {
   color: white;
   vertical-align: middle;
+}
+.closeModalBtn {
+  color: #42b983;
 }
 </style>
