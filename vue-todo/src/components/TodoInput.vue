@@ -24,23 +24,25 @@
 <script>
 import AlertModal from "./common/ModalTag.vue";
 export default {
-  data: function () {
+  data() {
     return {
       newTodoItem: "",
       showModal: false,
     };
   },
   methods: {
-    addTodo: function () {
+    addTodo() {
       if (this.newTodoItem !== "") {
         //addTodoItem 이벤트에 데이터 테워서 부모인 app으로 보냄
-        this.$emit("addTodoItem", this.newTodoItem);
+        // this.$emit("addTodoItem", this.newTodoItem);
+        const txt = this.newTodoItem.trim();
+        this.$store.commit("addOneItem", txt);
         this.clearInput();
       } else {
         this.showModal = !this.showModal;
       }
     },
-    clearInput: function () {
+    clearInput() {
       //초기화
       this.newTodoItem = "";
     },

@@ -2,14 +2,15 @@
   <div>
     <transition-group name="list" tag="ul">
       <li
-        v-for="(todoItem, idx) in propsdata"
-        v-bind:key="todoItem"
+        v-for="(todoItem, idx) in this.storedTodoItems"
+        v-bind:key="todoItem.item"
         class="shadow"
       >
+        <!-- propsdata 로 안하고 store 사용해서 가져올 수도 있음 -->
         <span
           class="checkBtn"
           v-bind:class="{ checkBtnCompeted: todoItem.completed }"
-          v-on:click="toggleComplete(todoItem, idx)"
+          v-on:click="toggleComplete({ todoItem, idx })"
         >
           <i class="fa-solid fa-check"></i>
         </span>
@@ -17,7 +18,7 @@
         <span v-bind:class="{ textCompleted: todoItem.completed }">{{
           todoItem.item
         }}</span>
-        <span class="removeBtn" v-on:click="removeTodo(todoItem, idx)">
+        <span class="removeBtn" v-on:click="removeTodo({ todoItem, idx })">
           <i class="fa-solid fa-trash"></i>
         </span>
       </li>
@@ -26,16 +27,37 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 export default {
   //app.vue에서 내려 받음
-  props: ["propsdata"],
+  // props: ["propsdata"], - store씀
   methods: {
-    removeTodo: function (todoItem, idx) {
-      this.$emit("removeItem", todoItem, idx);
-    },
-    toggleComplete: function (todoItem, idx) {
-      this.$emit("toggleItem", todoItem, idx);
-    },
+    ...mapMutations({
+      // 인자 선언 안해도 호출 단에 인자 넣으면 그대로 들고 넘겨줌
+      //  this.$store.commit("removeOneItem", { todoItem, idx }); 처럼 인자 선언 안해도 됨
+      removeTodo: "removeOneItem",
+      toggleComplete: "toggleOneItem",
+    }),
+    // removeTodo(todoItem, idx) {
+    //   // this.$emit("removeItem", todoItem, idx);
+    //   //App갈 필요 없이 바로 store 호출하면됨
+    //   this.$store.commit("removeOneItem", { todoItem, idx });
+    // },
+    // toggleComplete(todoItem, idx) {
+    //   // this.$emit("toggleItem", todoItem, idx);
+    //   //App갈 필요 없이 바로 store 호출하면됨
+    //   this.$store.commit("toggleOneItem", { todoItem, idx });
+    // },
+  },
+  computed: {
+    // todoItems() {
+    //   return this.$store.getters.sotredTodoItems;
+    // },
+    ...mapGetters(["storedTodoItems"]),
+    //객체 형태도 있는데 이 경우 store의 getters 이름과 컴포넌트에서 사용하는 위 이름이 다를때 씀
+    // ...mapGetters({
+    //   todoItems: "storedTodoItems"
+    //   }),
   },
 };
 </script>
